@@ -1,0 +1,39 @@
+name: IMS Project CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "staging" ]
+  pull_request:
+    branches: [ "staging" ]
+
+jobs:
+  laravel-vue-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Deploy to Your Server via SSH
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd /home/u166510592/domains/imsstaging.blisstechnologies.in/public_html
+          git checkout .
+          git pull origin staging
+          php artisan migrate --force
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 11.0.0
+          ${{ secrets.SSH_USER }}
+          npm install
+          npm run build
+          php artisan optimize:clear
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan queue:restart
