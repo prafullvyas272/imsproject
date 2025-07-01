@@ -65,8 +65,8 @@ class RegisteredUserController extends Controller
 
     public function enableTwoFA(Request $request)
     {
-        $isTwoFaEnabled = UserSetting::whereId($request->input('id'))->first()['two_factor_authentication'];
-        UserSetting::whereId($request->input('id'))->update([
+        $isTwoFaEnabled = UserSetting::whereUserId($request->input('id'))->first()['two_factor_authentication'];
+        UserSetting::whereUserId($request->input('id'))->update([
             'two_factor_authentication' => !$isTwoFaEnabled,
         ]);
 
