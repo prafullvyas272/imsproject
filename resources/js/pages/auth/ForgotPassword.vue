@@ -4,6 +4,7 @@ import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import AuthSplitLayout from '@/layouts/auth/AuthSplitLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
@@ -22,7 +23,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
+    <AuthSplitLayout title="Forgot password" description="Enter your email to receive a password reset link">
         <Head title="Forgot password" />
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
@@ -50,5 +51,5 @@ const submit = () => {
                 <TextLink :href="route('login')">log in</TextLink>
             </div>
         </div>
-    </AuthLayout>
+    </AuthSplitLayout>
 </template>

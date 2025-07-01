@@ -4,7 +4,7 @@ import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthBase from '@/layouts/AuthLayout.vue';
+import AuthSplitLayout from '@/layouts/auth/AuthSplitLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
@@ -23,7 +23,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="Create an account" description="Enter your details below to create your account">
+    <AuthSplitLayout title="Create an account" description="Enter your details below to create your account">
         <Head title="Register" />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
@@ -79,5 +79,5 @@ const submit = () => {
                 <TextLink :href="route('login')" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
             </div>
         </form>
-    </AuthBase>
+    </AuthSplitLayout>
 </template>
