@@ -13,18 +13,17 @@ defineProps<{
 </script>
 
 <template>
-    <div class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div class="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
+    <div
+        class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
+        <div class="relative hidden h-full flex-col bg-muted p-0 text-white lg:flex dark:border-r">
             <div class="absolute inset-0 bg-zinc-900" />
-            <Link :href="route('home')" class="relative z-20 flex items-center text-lg font-medium">
-                <AppLogoIcon class="mr-2 size-8 fill-current text-white" />
-                {{ name }}
+            <Link :href="route('home')" class="relative z-20 flex flex-1 items-center justify-center w-full h-full">
+            <AppLogoIcon class="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl h-auto"
+                style="max-height: 200px;" />
             </Link>
-            <div v-if="quote" class="relative z-20 mt-auto">
-                <blockquote class="space-y-2">
-                    <p class="text-lg">&ldquo;{{ quote.message }}&rdquo;</p>
-                    <footer class="text-sm text-neutral-300">{{ quote.author }}</footer>
-                </blockquote>
+            <div class="absolute bottom-0 left-0 w-full z-20 flex flex-col items-center pb-8 px-4">
+                <h2 class="text-lg font-semibold text-white drop-shadow text-center" v-if="name">{{ name }}</h2>
+                <p class="text-sm text-zinc-300 mt-1 text-center max-w-md" >The ultimate solution to your problems</p>
             </div>
         </div>
         <div class="lg:p-8">

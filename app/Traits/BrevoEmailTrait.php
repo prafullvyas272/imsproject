@@ -8,10 +8,16 @@ use App\Enums\BrevoTemplateEnum;
 use Illuminate\Support\Str;
 use App\Models\PasswordResetToken;
 use Illuminate\Support\Facades\DB;
+use App\Models\TwoFactorAuthenticationCode;
 
 trait BrevoEmailTrait
 {
-    public $emailUrl = 'https://api.brevo.com/v3/smtp/email';
+    protected string $emailUrl;
+
+    public function __construct()
+    {
+        $this->emailUrl = config('app.brevo_email_url');
+    }
 
     /**
      * Method to get the API headers for the Brevo API
@@ -51,7 +57,7 @@ trait BrevoEmailTrait
                 ],
             ]);
 
-            return $response;
+            return $response->json();
         } catch (\Throwable $exception) {
             Log::error('Something went wrong when sending registration email ' . $exception);
         }
@@ -91,42 +97,47 @@ trait BrevoEmailTrait
                 ],
             ]);
 
-            return $response;
+            return $response->json();
+
         } catch (\Throwable $exception) {
             Log::error('Something went wrong when sending account invite email ' . $exception);
         }
     }
 
     /**
-     * Method to send a two factor auth email to the user
+     * Method to generate 2fa auth code and send it to user
      */
-    public function sendTwoFactorAuthEmail($user, $password)
+    public function generateAuthCodeAndSendToUser($authUser)
     {
         try {
             $apiHeaders = $this->getApiHeaders();
+            DB::beginTransaction();
 
-            $templateId = BrevoTemplateEnum::TWO_FACTOR_AUTH_EMAIL;
-            $code = Str::random(6);
-
-            $response = Http::withHeaders($apiHeaders)->timeout(90)->post($this->emailUrl, [
-                'to' => [
-                    [
-                        'email' => $user['email'],
-                    ],
-                ],
-                'templateId' => $templateId,
-                'params' => [
-                    'first_name' => $user['first_name'],
-                    'email' => $user['email'],
-                    'password' => $password,
-                    'code' => $code,
-                    'app_url' => config('app.url') . '/login',
-                ],
+            TwoFactorAuthenticationCode::whereUserId($authUser['id'])->delete();
+            $twoFactorAuthCode = TwoFactorAuthenticationCode::create([
+                'code' => rand(100000, 999999),
+                'user_id' => $authUser['id'],
             ]);
 
-            return $response;
+            DB::commit();
+
+            $response = Http::withHeaders($apiHeaders)->post($this->emailUrl, [
+                'to' => [
+                    [
+                        'email' => $authUser['email'],
+                    ],
+                ],
+                'templateId' => BrevoTemplateEnum::TWO_FACTOR_AUTH_EMAIL,
+                'params' => [
+                    'name' => $authUser['name'],
+                    'email' => $authUser['email'],
+                    'code' => $twoFactorAuthCode['code'],
+                    'app_url' => config('app.url'),
+                ],
+            ]);
+            return $response->json();
         } catch (\Throwable $exception) {
-            Log::error('Something went wrong when sending 2fa email ' . $exception);
+            Log::error('Something went wrong when sending code' . $exception);
         }
     }
 }
