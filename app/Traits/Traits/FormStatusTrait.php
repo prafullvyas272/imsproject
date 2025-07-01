@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\Log;
 
 trait FormStatusTrait
 {
+    protected string $emailUrl;
+
+
      /**
      * Method to get the API headers for the Brevo API
      */
     public function getApiHeaders()
     {
+        $this->emailUrl = config('app.brevo_email_url');
         return [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
@@ -38,7 +42,8 @@ trait FormStatusTrait
                 'templateId' => $templateId,
                 'params' => $data
             ]);
-
+            // Logging the response for debugging purposes
+            Log::info('Form status notification response:', $response->json());
             return $response->json();
         } catch (\Throwable $exception) {
             Log::error('Something went wrong when sending registration email ' . $exception);

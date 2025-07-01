@@ -17,14 +17,16 @@ class FormApprovedByReviewer
     public $authUser;
     public $reviewer;
     public $data;
+    public $director;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($authUser, $reviewer, $data)
+    public function __construct($authUser, $reviewer, $director, $data)
     {
         $this->authUser = $authUser;
         $this->reviewer = $reviewer;
+        $this->director = $director;
         $this->data = $data;
     }
 

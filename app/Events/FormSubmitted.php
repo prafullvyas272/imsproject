@@ -15,15 +15,17 @@ class FormSubmitted
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $authUser;
-    public $formData;
+    public $reviewer;
+    public $data;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($authUser, $formData)
+    public function __construct($authUser, $reviewer, $data)
     {
         $this->authUser = $authUser;
-        $this->formData = $formData;
+        $this->reviewer = $reviewer;
+        $this->data = $data;
     }
 
     /**
