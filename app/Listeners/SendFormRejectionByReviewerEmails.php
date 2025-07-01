@@ -2,11 +2,16 @@
 
 namespace App\Listeners;
 
+use App\Events\FormRejectedByReviewer;
+use App\Traits\Traits\FormStatusTrait;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Enums\BrevoTemplateEnum;
 
 class SendFormRejectionByReviewerEmails
 {
+    use FormStatusTrait;
+
     /**
      * Create the event listener.
      */
@@ -18,8 +23,15 @@ class SendFormRejectionByReviewerEmails
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(FormRejectedByReviewer $event): void
     {
-        //
+        try {
+            // send mail to the user who submitted
+            $this->sendFormStatusNotificationEmail($event->authUser, BrevoTemplateEnum::FORM_REJECTED_BY_REVIEWER, $event->data);
+        } catch (\Throwable $exception) {
+            \Log::error('Error sending form rejected by reviewer email: ' . $exception->getMessage(), [
+                'exception' => $exception
+            ]);
+        }
     }
 }

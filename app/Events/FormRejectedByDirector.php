@@ -15,15 +15,17 @@ class FormRejectedByDirector
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $authUser;
+    public $reviewer;
     public $director;
     public $data;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($authUser, $director, $data)
+    public function __construct($authUser, $reviewer, $director, $data)
     {
         $this->authUser = $authUser;
+        $this->reviewer = $reviewer;
         $this->director = $director;
         $this->data = $data;
     }
