@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\UserSetting;
+use Illuminate\Support\Facades\DB;
 
 class RegisteredUserController extends Controller
 {
@@ -39,16 +41,39 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+
+        DB::beginTransaction();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
+        UserSetting::create([
+            'user_id' => $user->id,
+        ]);
+
+        DB::commit();
+
         $this->sendRegistrationEmail($user, $request->password);
 
         event(new Registered($user));
 
         return to_route('login');
+    }
+
+    public function enableTwoFA(Request $request)
+    {
+        $isTwoFaEnabled = UserSetting::whereId($request->input('id'))->first()['two_factor_authentication'];
+        UserSetting::whereId($request->input('id'))->update([
+            'two_factor_authentication' => !$isTwoFaEnabled,
+        ]);
+
+        return response()->json([
+            'message' => 'Two FA setting updated.',
+            'status' => true,
+            'current_status' => !$isTwoFaEnabled
+        ]);
     }
 }

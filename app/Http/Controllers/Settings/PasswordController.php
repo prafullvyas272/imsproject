@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Auth;
+use App\Models\UserSetting;
+
 
 class PasswordController extends Controller
 {
@@ -17,7 +20,14 @@ class PasswordController extends Controller
      */
     public function edit(): Response
     {
-        return Inertia::render('settings/Password');
+        $authUser = Auth::user();
+        $userSetting = UserSetting::whereId($authUser['id'])->first();
+        $isTwoFaEnabled = $userSetting ? $userSetting['two_factor_authentication'] : false;
+
+        return Inertia::render('settings/Password', [
+            'isTwoFaEnabled' => $isTwoFaEnabled,
+            'authUser' => $authUser,
+        ]);
     }
 
     /**
