@@ -36,6 +36,9 @@ const mainNavItems: NavItem[] = [
             <NavMain :items="mainNavItems" />
         </SidebarContent>
 
+        <SidebarFooter>
+            <NavUser />
+        </SidebarFooter>
     </Sidebar>
     <slot />
 </template>

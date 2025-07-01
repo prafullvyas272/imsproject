@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Traits\BrevoEmailTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 
 class PasswordResetLinkController extends Controller
 {
+    use BrevoEmailTrait;
+
     /**
      * Show the password reset link request page.
      */
@@ -32,9 +36,10 @@ class PasswordResetLinkController extends Controller
             'email' => 'required|email',
         ]);
 
-        Password::sendResetLink(
-            $request->only('email')
-        );
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            $this->sendForgotPasswordEmail($user);
+        }
 
         return back()->with('status', __('A reset link will be sent if the account exists.'));
     }
