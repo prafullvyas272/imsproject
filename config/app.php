@@ -55,6 +55,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
     'brevo_email_url' => env('BREVO_EMAIL_URL'),
     'max_otp_timeout' => 5 ,//In,
+    'brevo_api_key' => env('BREVO_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------
