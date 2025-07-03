@@ -14,18 +14,48 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // yellow , blue, green, purple,
         $roles = [
-            ['id' => RoleEnum::ADMIN, 'name' => 'Admin'],
-            ['id' => RoleEnum::OFFICER, 'name' => 'Officer'],
-            ['id' => RoleEnum::REVIEWER, 'name' => 'Reviewer'],
-            ['id' => RoleEnum::DIRECTOR, 'name' => 'Director'],
-            ['id' => RoleEnum::BOARD_MEMBER, 'name' => 'Board Member'],
+            [
+                'id' => RoleEnum::ADMIN,
+                'name' => 'Admin',
+                'form_theme' => 'bg-primary text-white',
+                'bg_theme' => 'bg-primary'
+            ],
+            [
+                'id' => RoleEnum::OFFICER,
+                'name' => 'Officer',
+                'form_theme' => 'bg-purple-200',
+                'bg_theme' => 'bg-purple-200'
+            ],
+            [
+                'id' => RoleEnum::REVIEWER,
+                'name' => 'Reviewer',
+                'form_theme' => 'bg-green-200',
+                'bg_theme' => 'bg-green-200'
+            ],
+            [
+                'id' => RoleEnum::DIRECTOR,
+                'name' => 'Director',
+                'form_theme' => 'bg-blue-200',
+                'bg_theme' => 'bg-blue-200'
+            ],
+            [
+                'id' => RoleEnum::BOARD_MEMBER,
+                'name' => 'Board Member',
+                'form_theme' => 'bg-yellow-200',
+                'bg_theme' => 'bg-yellow-200'
+            ],
         ];
 
         foreach ($roles as $role) {
             DB::table('roles')->updateOrInsert(
                 ['id' => $role['id']],
-                ['name' => $role['name']]
+                [
+                    'name' => $role['name'],
+                    'form_theme' => $role['form_theme'],
+                    'bg_theme' => $role['bg_theme'],
+                ]
             );
         }
     }
