@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\UserActivity\UserActivityController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -30,6 +31,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     // User routes here
     Route::resource('user', UserController::class);
+
+    // User activity routes here
+    Route::get('user/{user}/activity' , [UserActivityController::class, 'showUserActivity'])->name('user.showUserActivity');
 });
 
 require __DIR__.'/settings.php';

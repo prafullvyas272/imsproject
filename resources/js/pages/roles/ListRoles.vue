@@ -100,10 +100,12 @@ const roleDataUpdated = (data) => {
 };
 
 
-
+const totalRolesLength = ref<number>(0);
 
 onMounted(() => {
     filteredRoles.value = props.roles.slice(0, rowsPerPage.value);
+    totalRolesLength.value = props.roles ? props.roles.length : 0;
+
 });
 </script>
 
@@ -191,8 +193,8 @@ onMounted(() => {
             </div>
             <!-- Pagination Component -->
             <Pagination
-                v-if="filteredRoles?.length > rowsPerPage"
-                :totalRecords="filteredRoles?.length"
+                v-if="totalRolesLength > rowsPerPage"
+                :totalRecords="totalRolesLength"
                 :rowsPerPage="rowsPerPage"
                 v-model:currentPage="currentPage"
                 @update:currentPage="pageChanged()"

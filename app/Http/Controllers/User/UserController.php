@@ -17,9 +17,13 @@ use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Enums\RoleEnum;
+use App\Enums\UserActivityEnum;
+use App\Traits\UserActivityTrait;
+use Illuminate\Support\Facades\DB;
+
 class UserController extends Controller
 {
-    use ApiResponseTrait, RoleTrait, DepartmentTrait;
+    use ApiResponseTrait, RoleTrait, DepartmentTrait, UserActivityTrait;
 
     /**
      * Display a listing of the resource.
@@ -43,13 +47,23 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $data = [
-            'password' => Hash::make(Str::random(8))
-        ];
-        $userData = array_merge($data, $request->userData());
-        User::create($userData);
-        $users = $this->getAllUsers();
-        return $this->successResponse($users, 'User created successfully.', 201);
+        try {
+            $response = DB::transaction(function () use ($request) {
+                $data = [
+                    'password' => Hash::make(Str::random(8))
+                ];
+                $userData = array_merge($data, $request->userData());
+
+                $user = User::create($userData);
+                $this->updateUserActivity($user, UserActivityEnum::CREATED);
+
+                $users = $this->getAllUsers();
+                return $this->successResponse($users, 'User created successfully.', 201);
+            });
+            return $response;
+        } catch (\Throwable $exception) {
+            return $this->errorResponse('Something went wrong when creating User.', $exception, 500);
+        }
     }
 
 
@@ -58,9 +72,19 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->userData());
-        $users = $this->getAllUsers();
-        return $this->successResponse($users, 'User updated successfully.', 200);
+        try {
+            $response = DB::transaction(function () use ($request, $user) {
+
+                $user->update($request->userData());
+                $this->updateUserActivity($user, UserActivityEnum::UPDATED);
+
+                $users = $this->getAllUsers();
+                return $this->successResponse($users, 'User updated successfully.', 200);
+            });
+            return $response;
+        } catch (\Throwable $exception) {
+            return $this->errorResponse('Something went wrong when updating User.', $exception, 500);
+        }
     }
 
     /**
@@ -68,9 +92,17 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        try {
+            $response = DB::transaction(function () use ($user) {
+                $user->delete();
+                $this->updateUserActivity($user, UserActivityEnum::DELETED);
 
-        return $this->successResponse([], 'User deleted successfully.', 200);
+                return $this->successResponse([], 'User deleted successfully.', 200);
+            });
+            return $response;
+        } catch (\Throwable $exception) {
+            return $this->errorResponse('Something went wrong when deleting User.', $exception, 500);
+        }
     }
 
     /**
