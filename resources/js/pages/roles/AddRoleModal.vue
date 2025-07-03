@@ -46,7 +46,7 @@ const submitForm = () => {
                 closeModal();
                 emit('roleCreated', response.data.data);
             }).catch((error) => {
-                formErrors.value = error.response.data.errors;
+                formErrors.value = error.response?.data?.errors ?? {};
                 isSubmitting.value = false;
                 $toast.error('Something went wrong.');
             })

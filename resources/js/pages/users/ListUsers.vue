@@ -7,7 +7,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
-import { Plus  } from 'lucide-vue-next';
+import { Eye, Plus  } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 import { useToast } from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
@@ -16,7 +16,8 @@ import { Trash } from 'lucide-vue-next';
 import AddUserModal from './AddUserModal.vue';
 import EditUserModal from './EditUserModal.vue';
 import {useAuthStore} from '../../stores/AuthStore.js';
-
+import {Link} from '@inertiajs/vue3';
+import NavLink from '@/components/ui/nav-link/NavLink.vue';
 
 const $toast = useToast();
 // Breadcrumbs
@@ -113,6 +114,7 @@ const getRoleThemebyId = (roleId:number) => {
     return props.roles?.find((role) => role?.id === roleId)?.form_theme ?? null;
 }
 
+const totalUsersLength = ref<number>(0);
 
 
 
@@ -120,6 +122,8 @@ onMounted(() => {
     const auth = useAuthStore();
     console.log(auth.user);
     filteredUsers.value = props.users ? props.users.slice(0, rowsPerPage.value) : [];
+    totalUsersLength.value = props.users ? props.users.length : 0;
+
 });
 </script>
 
@@ -153,7 +157,7 @@ onMounted(() => {
             <Input
                 v-model="searchBox"
                 @input="searchUser"
-                placeholder="Search role by name..."
+                placeholder="Search user by name..."
                 class="col-span-1 md:col-span-9 w-full"
             />
 
@@ -214,12 +218,15 @@ onMounted(() => {
                                     <Button @click="openDeleteModal(userData)" size="sm" variant="destructive">
                                         <Trash class="h-4 w-4" />Delete
                                     </Button>
+                                    <NavLink variant="outline" :href="route('user.showUserActivity', {user: userData?.id})">
+                                        <Eye class="h-4 w-4" />View Activity
+                                    </NavLink>
                                 </div>
                             </td>
                         </tr>
                         <tr v-if="!filteredUsers?.length" class="text-center">
                             <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                                No roles found.
+                                No users found.
                             </td>
                         </tr>
                     </tbody>
@@ -227,8 +234,8 @@ onMounted(() => {
             </div>
             <!-- Pagination Component -->
             <Pagination
-                v-if="filteredUsers?.length > rowsPerPage"
-                :totalRecords="filteredUsers?.length"
+                v-if="totalUsersLength > rowsPerPage"
+                :totalRecords="totalUsersLength"
                 :rowsPerPage="rowsPerPage"
                 v-model:currentPage="currentPage"
                 @update:currentPage="pageChanged()"

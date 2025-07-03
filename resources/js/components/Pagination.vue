@@ -6,6 +6,9 @@
           <button
             @click="prevPage"
             :disabled="currentPage === 1"
+            :class="[
+                { 'cursor-pointer': currentPage !== 1 }
+            ]"
             class="px-4 py-2 text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50">
             Previous
           </button>
@@ -16,7 +19,7 @@
           <button
             @click="changePage(page)"
             :class="[
-              'px-4 py-2 border border-gray-300 rounded-md',
+              'px-4 py-2 border border-gray-300 rounded-md cursor-pointer',
               currentPage === page
                 ? 'bg-gray-900 text-white'
                 : 'bg-white text-gray-500 hover:bg-gray-100'
@@ -30,6 +33,9 @@
           <button
             @click="nextPage"
             :disabled="currentPage === totalPages"
+            :class="[
+                { 'cursor-pointer' : currentPage !== totalPages}
+            ]"
             class="px-4 py-2 text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50">
             Next
           </button>

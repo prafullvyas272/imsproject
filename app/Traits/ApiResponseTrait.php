@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Log;
+
 trait ApiResponseTrait
 {
     /**
@@ -34,8 +36,9 @@ trait ApiResponseTrait
      * @param mixed $errors
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorResponse($message = null, $code = 400, $errors = null)
+    public function errorResponse($message = null, $exception =null,  $code = 400, $errors = null)
     {
+        Log::error($message . ' ' . $exception);
         $response = [
             'success' => false,
             'message' => $message,

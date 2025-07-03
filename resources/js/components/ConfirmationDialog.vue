@@ -24,6 +24,7 @@ const closeModal = () => {
 };
 
 const deleteData = () => {
+    isSubmitting.value = true;
     emit('deleteConfirmed')
 };
 
