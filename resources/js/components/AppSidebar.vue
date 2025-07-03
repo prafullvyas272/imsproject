@@ -5,14 +5,39 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, Group, GroupIcon, IdCard, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { User2 } from 'lucide-vue-next';
+import { defineProps } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+const page = usePage();
 
+
+const roleId = page.props.auth.user?.role_id;
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
+    },
+];
+
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Role Management',
+        href: '/role',
+        icon: IdCard,
+    },
+    {
+        title: 'User Management',
+        href: '/user',
+        icon: User2,
     },
 ];
 
@@ -33,7 +58,8 @@ const mainNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <!-- this should be dynamic -->
+            <NavMain :items="adminNavItems" v-if="roleId == 1" />
         </SidebarContent>
 
         <SidebarFooter>
