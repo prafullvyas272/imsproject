@@ -15,6 +15,8 @@ import { Edit } from 'lucide-vue-next';
 import { Trash } from 'lucide-vue-next';
 import AddUserModal from './AddUserModal.vue';
 import EditUserModal from './EditUserModal.vue';
+import {useAuthStore} from '../../stores/AuthStore.js';
+
 
 const $toast = useToast();
 // Breadcrumbs
@@ -115,6 +117,8 @@ const getRoleThemebyId = (roleId:number) => {
 
 
 onMounted(() => {
+    const auth = useAuthStore();
+    console.log(auth.user);
     filteredUsers.value = props.users ? props.users.slice(0, rowsPerPage.value) : [];
 });
 </script>

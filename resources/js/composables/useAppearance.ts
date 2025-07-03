@@ -1,4 +1,5 @@
 import { onMounted, ref } from 'vue';
+import { useAuthStore } from '@/stores/AuthStore';
 
 type Appearance = 'light' | 'dark' | 'system';
 
@@ -16,6 +17,20 @@ export function updateTheme(value: Appearance) {
         document.documentElement.classList.toggle('dark', value === 'dark');
     }
 }
+
+export function updateThemeInState(value: Appearance) {
+    const authStore = useAuthStore();
+
+    if (value === 'dark') {
+        authStore.toggleDarkTheme(true);
+    } else if (value === 'light') {
+        authStore.toggleDarkTheme(false);
+    } else if (value === 'system') {
+        const mq = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+        authStore.toggleDarkTheme(mq ? mq.matches : false);
+    }
+}
+
 
 const setCookie = (name: string, value: string, days = 365) => {
     if (typeof document === 'undefined') {
@@ -65,6 +80,7 @@ export function initializeTheme() {
 const appearance = ref<Appearance>('system');
 
 export function useAppearance() {
+
     onMounted(() => {
         const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
 
@@ -83,6 +99,7 @@ export function useAppearance() {
         setCookie('appearance', value);
 
         updateTheme(value);
+        updateThemeInState(value);
     }
 
     return {
