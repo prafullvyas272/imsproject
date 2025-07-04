@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import { computed, ComputedRef, type HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { type ButtonVariants, buttonVariants } from '.'
+import { useAuthStore } from '@/stores/AuthStore';
 
 interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant']
@@ -13,6 +14,19 @@ interface Props extends PrimitiveProps {
 const props = withDefaults(defineProps<Props>(), {
   as: 'button',
 })
+
+const authStore = useAuthStore();
+
+const bgThemeClass:ComputedRef = computed(() => {
+    return authStore.bgTheme;
+});
+
+const formThemeClass: ComputedRef = computed(() => {
+  let excludedVariants: Array<ButtonVariants['variant']> = ['ghost', 'destructive'];
+  return excludedVariants.includes(props.variant) ? '' : authStore.formTheme;
+});
+
+console.log(bgThemeClass.value, formThemeClass.value);
 </script>
 
 <template>
@@ -21,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
     data-slot="button"
     :as="as"
     :as-child="asChild"
-    :class="cn(buttonVariants({ variant, size }), props.class)"
+    :class="cn(buttonVariants({ variant, size }), formThemeClass, props.class)"
   >
     <slot />
   </Primitive>
