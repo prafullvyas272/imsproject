@@ -110,6 +110,11 @@ const getRolebyId = (roleId:number) => {
     return props.roles?.find((role) => role?.id === roleId)?.name ?? null;
 }
 
+const getDepartmentbyId = (departmentId:number) => {
+    return props.departments?.find((department) => department?.id === departmentId)?.name ?? null;
+}
+
+
 const getRoleThemebyId = (roleId:number) => {
     return props.roles?.find((role) => role?.id === roleId)?.form_theme ?? null;
 }
@@ -208,7 +213,7 @@ onMounted(() => {
                                 </b>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                {{ userData?.department_id }}
+                                <b>{{ getDepartmentbyId(userData?.department_id)  }}</b>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                 <div class="flex gap-2">
