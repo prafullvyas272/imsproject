@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\AdminMiddleware;
@@ -31,6 +32,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     // User routes here
     Route::resource('user', UserController::class);
+
+    // Department routes here
+    Route::resource('department', DepartmentController::class);
 
     // User activity routes here
     Route::get('user/{user}/activity' , [UserActivityController::class, 'showUserActivity'])->name('user.showUserActivity');

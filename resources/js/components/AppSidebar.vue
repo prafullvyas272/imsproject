@@ -4,8 +4,10 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { IdCard, LayoutGrid } from 'lucide-vue-next';
+import { Group, IdCard, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { Briefcase } from 'lucide-vue-next';
+import { GroupIcon } from 'lucide-vue-next';
 import { User2 } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
 const page = usePage();
@@ -31,6 +33,11 @@ const adminNavItems: NavItem[] = [
         title: 'User Management',
         href: '/user',
         icon: User2,
+    },
+    {
+        title: 'Department Management',
+        href: '/department',
+        icon: Briefcase,
     },
 ];
 
