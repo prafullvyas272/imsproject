@@ -5,6 +5,7 @@ namespace App\Traits;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Enums\BrevoTemplateEnum;
+use App\Enums\RoleEnum;
 use Illuminate\Support\Str;
 use App\Models\PasswordResetToken;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ trait BrevoEmailTrait
      */
     public function getApiHeaders()
     {
+        $this->emailUrl = config('app.brevo_email_url');
         return [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
@@ -49,7 +51,7 @@ trait BrevoEmailTrait
                 ],
                 'templateId' => $templateId,
                 'params' => [
-                    'first_name' => $user['first_name'],
+                    'first_name' => $user['name'],
                     'email' => $user['email'],
                     'password' => $password,
                     'app_name' => config('app.name'),
@@ -90,7 +92,7 @@ trait BrevoEmailTrait
                 ],
                 'templateId' => $templateId,
                 'params' => [
-                    'first_name' => $user['first_name'],
+                    'first_name' => $user['name'],
                     'email' => $user['email'],
                     'password_reset_link' => $passwordResetLink,
                     'app_url' => config('app.url') . '/login',
@@ -138,6 +140,39 @@ trait BrevoEmailTrait
             return $response->json();
         } catch (\Throwable $exception) {
             Log::error('Something went wrong when sending code' . $exception);
+        }
+    }
+
+    /**
+     * Method to send a user account created email to the user
+     */
+    public function sendAccountCreatedEmail($user, $password)
+    {
+        try {
+            $apiHeaders = $this->getApiHeaders();
+
+            $templateId = BrevoTemplateEnum::USER_ACCOUNT_CREATED_EMAIL;
+
+            $response = Http::withHeaders($apiHeaders)->timeout(90)->post($this->emailUrl, [
+                'to' => [
+                    [
+                        'email' => $user['email'],
+                    ],
+                ],
+                'templateId' => $templateId,
+                'params' => [
+                    'first_name' => $user['name'],
+                    'email' => $user['email'],
+                    'password' => $password,
+                    'role' => RoleEnum::toArray()[$user['role_id']],
+                    'app_name' => config('app.name'),
+                    'app_url' => config('app.url') . '/login',
+                ],
+            ]);
+
+            return $response->json();
+        } catch (\Throwable $exception) {
+            Log::error('Something went wrong when sending registration email ' . $exception);
         }
     }
 }

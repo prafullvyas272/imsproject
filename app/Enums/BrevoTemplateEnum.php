@@ -12,4 +12,5 @@ enum BrevoTemplateEnum
     const FORM_REJECTED_BY_REVIEWER = 6;
     const FORM_APPROVED_BY_DIRECTOR = 7;
     const FORM_REJECTED_BY_DIRECTOR = 8;
+    const USER_ACCOUNT_CREATED_EMAIL = 9;
 }

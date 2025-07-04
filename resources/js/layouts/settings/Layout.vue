@@ -14,10 +14,10 @@ const sidebarNavItems: NavItem[] = [
         title: 'Password',
         href: '/settings/password',
     },
-    {
-        title: 'Appearance',
-        href: '/settings/appearance',
-    },
+    //Need to uncomment when needed TODO: {
+    //     title: 'Appearance',
+    //     href: '/settings/appearance',
+    // },
 ];
 
 const page = usePage();

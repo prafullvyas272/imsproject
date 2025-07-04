@@ -124,8 +124,8 @@ const enableTwoFA = () => {
             </div>
 
             <div>
-                <!-- Two-Factor Authentication Section -->
-                <div>
+                <!-- Two-Factor Authentication Section TODO: need to uncomment when needed -->
+                <!-- <div>
                     <h3 class="text-xl font-semibold">Two-Factor Authentication</h3>
                     <div class="mt-4 flex items-center justify-between">
                         <div class="space-y-0.5">
@@ -143,7 +143,7 @@ const enableTwoFA = () => {
                         </Switch>
 
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </SettingsLayout>
