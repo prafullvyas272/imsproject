@@ -18,6 +18,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Enums\RoleEnum;
 use App\Enums\UserActivityEnum;
+use App\Jobs\SendUserAccountCreatedEmailJob;
 use App\Traits\UserActivityTrait;
 use Illuminate\Support\Facades\DB;
 
@@ -49,13 +50,15 @@ class UserController extends Controller
     {
         try {
             $response = DB::transaction(function () use ($request) {
+                $password = Str::random(8);
                 $data = [
-                    'password' => Hash::make(Str::random(8))
+                    'password' => Hash::make($password)
                 ];
                 $userData = array_merge($data, $request->userData());
 
                 $user = User::create($userData);
                 $this->updateUserActivity($user, UserActivityEnum::CREATED);
+                dispatch(new SendUserAccountCreatedEmailJob($user, $password));
 
                 $users = $this->getAllUsers();
                 return $this->successResponse($users, 'User created successfully.', 201);
