@@ -6,7 +6,7 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 import HeadingSmall from '@/components/HeadingSmall.vue';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
@@ -111,6 +111,10 @@ const enableTwoFA = () => {
                             class="mt-1 block w-full" autocomplete="new-password" placeholder="Confirm password" />
                         <InputError :message="form.errors.password_confirmation" />
                     </div>
+
+
+
+
 
                     <div class="flex items-center gap-4">
                         <Button :disabled="form.processing">Save password</Button>

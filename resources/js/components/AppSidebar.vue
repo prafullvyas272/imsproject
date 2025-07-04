@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, Group, GroupIcon, IdCard, LayoutGrid } from 'lucide-vue-next';
+import { IdCard, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { User2 } from 'lucide-vue-next';
-import { defineProps } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 const page = usePage();
 
 
-const roleId = page.props.auth.user?.role_id;
-const mainNavItems: NavItem[] = [
+const roleId:number = page.props.auth.user?.role_id;
+const commonNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
@@ -24,11 +22,6 @@ const mainNavItems: NavItem[] = [
 
 
 const adminNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
     {
         title: 'Role Management',
         href: '/role',
@@ -40,6 +33,14 @@ const adminNavItems: NavItem[] = [
         icon: User2,
     },
 ];
+
+const getNavItemsByRole = () => {
+    if (roleId === 1) {
+        return commonNavItems.concat(adminNavItems);
+    } else {
+        return commonNavItems;
+    }
+}
 
 </script>
 
@@ -58,8 +59,7 @@ const adminNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <!-- this should be dynamic -->
-            <NavMain :items="adminNavItems" v-if="roleId == 1" />
+            <NavMain :items="getNavItemsByRole()"/>
         </SidebarContent>
 
         <SidebarFooter>

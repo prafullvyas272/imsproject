@@ -14,7 +14,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // yellow , blue, green, purple,
+        // Apply theme accordingly for each role
         $roles = [
             [
                 'id' => RoleEnum::ADMIN,
@@ -25,26 +25,26 @@ class RoleSeeder extends Seeder
             [
                 'id' => RoleEnum::OFFICER,
                 'name' => 'Officer',
-                'form_theme' => 'bg-purple-200',
-                'bg_theme' => 'bg-purple-200'
+                'form_theme' => 'bg-blue-900 text-white',
+                'bg_theme' => 'bg-blue-900'
             ],
             [
                 'id' => RoleEnum::REVIEWER,
                 'name' => 'Reviewer',
-                'form_theme' => 'bg-green-200',
-                'bg_theme' => 'bg-green-200'
+                'form_theme' => 'bg-green-700 text-white',
+                'bg_theme' => 'bg-green-700'
             ],
             [
                 'id' => RoleEnum::DIRECTOR,
                 'name' => 'Director',
-                'form_theme' => 'bg-blue-200',
-                'bg_theme' => 'bg-blue-200'
+                'form_theme' => 'bg-purple-800 text-white',
+                'bg_theme' => 'bg-purple-800'
             ],
             [
                 'id' => RoleEnum::BOARD_MEMBER,
                 'name' => 'Board Member',
-                'form_theme' => 'bg-yellow-200',
-                'bg_theme' => 'bg-yellow-200'
+                'form_theme' => 'bg-yellow-600 text-white',
+                'bg_theme' => 'bg-yellow-600'
             ],
         ];
 
